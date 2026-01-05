@@ -1,0 +1,52 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.pyre/
+*.log
+
+# --- Virtualenv ---
+venv/
+.venv/
+env/
+ENV/
+
+# --- Django ---
+db.sqlite3
+*.sqlite3
+local_settings.py
+.env
+.env.*
+!.env.example
+db.sqlite3-journal
+
+
+# Django static/media
+staticfiles/
+media/
+
+# --- Build / packaging ---
+build/
+dist/
+*.egg-info/
+
+# --- Tests / coverage ---
+.coverage
+coverage.xml
+htmlcov/
+.tox/
+.nox/
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+
+# --- IDE ---
+.idea/
+.vscode/
+*.iml
+*.swp
+
