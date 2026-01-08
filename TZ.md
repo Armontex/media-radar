@@ -45,7 +45,7 @@ MediaRadar - веб‑сервис подписки на релизы медиа
 - `number` - номер серии/главы (опционально).
 - `season` - номер сезона (опционально)
 - `released_at` - дата/время релиза (если известно).
-- `summary` - короткое описание (опционально).
+- `description` - короткое описание (опционально).
 - `external_release_id` - идентификатор во внешнем источнике (на будущем этапе).
 - `created_at` - когда запись добавлена в систему.
 
@@ -74,7 +74,7 @@ MediaRadar - веб‑сервис подписки на релизы медиа
 
 - `user` - ForeignKey на User.
 - `title` - ForeignKey на Title.
-- `release` - ForeignKey на Release (nullable, если уведомление не привязано к релизу).
+- `release` - ForeignKey на Release.
 - `channel` - канал (email/telegram/внутренние).
 - `status` - успех/ошибка/ожидает.
 - `sent_at` - когда отправлено/показано.
