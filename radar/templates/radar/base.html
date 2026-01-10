@@ -1,0 +1,42 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'radar/main.css' %}" />
+    <title>MediaRadar</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="header__wrapper container">
+        <nav class="header__nav">
+          <a href="/" id="logo">MediaRadar</a>
+          <ul class="nav__list">
+            <li class="nav__item">
+              <a href="/subscriptions" class="nav__item-link">
+                <img
+                  src="{% static 'radar/icons/subscriptions.svg' %}"
+                  alt="subscriptions"
+                  class="nav__item-icon nav__item-icon--subs"
+                />
+                <span class="nav__item-text">Мои подписки</span>
+              </a>
+            </li>
+            <li class="nav__item">
+              <a href="/account" class="nav__item-link">
+                <img
+                  src="{% static 'radar/icons/account_circle.svg' %}"
+                  alt="account"
+                  class="nav__item-icon nav__item--account"
+                />
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+    <main>{% block content %}{% endblock %}</main>
+  </body>
+</html>

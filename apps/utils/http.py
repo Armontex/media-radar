@@ -31,7 +31,7 @@ class HTTPClient:
         logger.info("Выполняется запрос",
                     extra={
                         "method": method.value,
-                        "url": url,
+                        "url": url
                     })
 
         response = self._session.request(method.value, url, **kwargs)

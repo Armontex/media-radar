@@ -1,0 +1,35 @@
+{% extends "radar/base.html" %}
+
+{% block content %}
+<div class="mediaradar__wrapper container">
+  <div class="mediaradar__search">
+    <h2 class="search__title">Поиск</h2>
+    <form method="get" class="search__form">
+      <input name="q" class="search__input" value="{{ q }}" placeholder="Введите название...">
+      <button class="search__btn btn btn--search" type="submit">Искать</button>
+    </form>
+  </div>
+  <div class="mediaradar__catalog">
+    {% if q %}
+      <h2 class="catalog__title">Результаты поиска</h2>
+      <ul class="catalog__list">
+        {% for t in search_results %}
+          <li class="catalog__item">
+            <a href="" class="item__link"> <!-- TODO: Ссылку вставить и у изображений в css добавить wigth и height -->
+              {% if t.cover_url %}
+              <img src="{{ t.cover_url }}" alt="cover" class="item__cover">
+              {% else %}
+              <img src="https://mobius-lubes.com/wp-content/uploads/2025/09/empty-img.webp" alt=""
+                class="item__empty-cover">
+              {% endif %}
+              <span class="item__name">{{ t.name|truncatechars:20 }}</span>
+            </a>
+          </li>
+        {% empty %}
+          <p class="catalog__empty">Ничего не найдено...</p>
+        {% endfor %}
+      </ul>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
