@@ -242,12 +242,20 @@ h6 {
   gap: 50px;
 }
 
+.catalog__title {
+  text-align: center;
+}
+
 .catalog__list {
   list-style: none;
   display: grid;
   grid-template-columns: repeat(auto-fit, 230px);
   gap: 50px;
   justify-content: center;
+}
+
+.catalog__item {
+  position: relative;
 }
 
 .item__link {
@@ -265,4 +273,22 @@ h6 {
   height: 300px;
   border: 3px solid white;
   border-radius: 10px;
+}
+
+.item__action-form {
+  position: absolute;
+  right: 0;
+  top: 0;
+  transform: translate(-25%, 25%);
+}
+.item__action-form button {
+  padding: 0;
+  margin: 0;
+  background: none;
+  width: 20px;
+  height: 20px;
+}
+
+.item__icon-action {
+  width: 20px;
 }/*# sourceMappingURL=home.css.map */

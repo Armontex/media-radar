@@ -1,0 +1,1 @@
+from .tvmaze import TVMazeProvider

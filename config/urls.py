@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.contrib.auth.views import LoginView
 from django.urls import path, include
-from radar.views import home, profile, register, not_found
+from radar.views import home, profile, register, not_found, add_title, delete_title
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,4 +29,6 @@ urlpatterns = [
          LoginView.as_view(redirect_authenticated_user=True),
          name='login'),
     path('account/register/', register, name='register'),
+    path('subscriptions/add/', add_title, name='subscriptions_add'),
+    path('subscriptions/delete/', delete_title, name='subscriptions_delete')
 ]

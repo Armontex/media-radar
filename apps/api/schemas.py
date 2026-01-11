@@ -51,3 +51,13 @@ class TVMazeEpisodeSchema(BaseModel):
     airstamp: datetime | None = None
 
     model_config = ConfigDict(extra="ignore")
+
+
+class TVMazeShowSchema(BaseModel):
+    id: int
+    name: str
+    status: str | None = None
+    image: Image | None = None
+    summary: str | None = None
+
+    model_config = ConfigDict(extra="ignore")

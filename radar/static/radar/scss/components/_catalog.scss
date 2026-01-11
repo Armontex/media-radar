@@ -10,12 +10,20 @@
   gap: 50px;
 }
 
+.catalog__title {
+  text-align: center;
+}
+
 .catalog__list {
   list-style: none;
   display: grid;
   grid-template-columns: repeat(auto-fit, 230px);
   gap: 50px;
   justify-content: center;
+}
+
+.catalog__item {
+  position: relative;
 }
 
 .item__link {
@@ -26,7 +34,7 @@
   border: 3px solid #77a58d;
   padding: 20px 15px 10px;
   border-radius: 10px;
-  background: var(--main-color);;
+  background: var(--main-color);
 
   & img {
     width: 200px;
@@ -34,4 +42,23 @@
     border: 3px solid white;
     border-radius: 10px;
   }
+}
+
+.item__action-form {
+  position: absolute;
+  right: 0;
+  top: 0;
+  transform: translate(-25%, 25%);
+
+  & button {
+    padding: 0;
+    margin: 0;
+    background: none;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.item__icon-action {
+  width: 20px;
 }
