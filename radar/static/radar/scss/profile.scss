@@ -11,3 +11,18 @@
 @use 'components/form_wrapper';
 @use 'components/inputform';
 @use 'components/header';
+
+.profile__info {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+}
+
+.profile-label {
+    font-weight: 600;
+}
+
+.profile__logout-btn {
+    margin-top: 25px;
+}

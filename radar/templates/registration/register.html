@@ -13,19 +13,24 @@
         {% csrf_token %}
 
         <div class="form__field input-form">
-            {{ form.username.label_tag }}
-            {{ form.username }}
+            {{ reg_form.username.label_tag }}
+            {{ reg_form.username }}
         </div>
 
         <div class="form__field input-form">
-            {{ form.password1.label_tag }}
-            {{ form.password1 }}
+            <label for="{{ email_form.email.id_for_label }}">Email:</label>
+            {{ email_form.email }}
+        </div>
+
+        <div class="form__field input-form">
+            {{ reg_form.password1.label_tag }}
+            {{ reg_form.password1 }}
 
         </div>
 
         <div class="form__field input-form">
-            {{ form.password2.label_tag }}
-            {{ form.password2 }}
+            {{ reg_form.password2.label_tag }}
+            {{ reg_form.password2 }}
 
         </div>
         {% for error in form.username.errors %}

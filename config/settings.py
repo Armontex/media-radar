@@ -118,9 +118,9 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-LOGIN_URL = '/accounts/login/'
+LOGIN_URL = '/account/login/'
 LOGIN_REDIRECT_URL = '/profile/'
-LOGOUT_REDIRECT_URL = '/accounts/login/'
+LOGOUT_REDIRECT_URL = '/account/login/'
 APPEND_SLASH = True
 
 

@@ -6,7 +6,20 @@
 {% endblock %} 
 
 {% block content %}
-<div class="profile__wrapper container">
-    
+<div class="profile__wrapper container form__wrapper">
+    <div class="profile__info">
+        <div class="profile__username-field">
+            <label for="id_username" class="username__label profile-label">Имя пользователя:</label>
+            <span class="username__text">{{ user.username }}</span>
+        </div>
+        <div class="profile__email-field">
+            <label for="id_email" class="email__label profile-label">Email:</label>
+            <span class="email__text">{{ profile.email }}</span>
+        </div>
+        <form method="post" class="profile__logout-btn" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit">Выйти</button>
+        </form>
+    </div>
 </div>
 {% endblock %}

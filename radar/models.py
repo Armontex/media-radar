@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 from .choices import SourceChoices, NotifyChannelChoices, StatusChoices
 
 
@@ -47,9 +48,13 @@ class Release(models.Model):
         ]
 
 
-class User(models.Model):
-    id = models.AutoField(primary_key=True)
-    email = models.EmailField("EMAIL", unique=True, null=False)
+class Profile(models.Model):
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="profile",
+    )
+    email = models.EmailField("EMAIL")
     telegram_id = models.IntegerField("TELEGRAM_ID",
                                       unique=True,
                                       null=True,
@@ -62,10 +67,12 @@ class User(models.Model):
 
 class Subscription(models.Model):
 
-    user = models.ForeignKey(User,
-                             on_delete=models.CASCADE,
-                             related_name="subscriptions",
-                             verbose_name="Пользователь")
+    profile = models.ForeignKey(Profile,
+                                on_delete=models.CASCADE,
+                                related_name="subscriptions",
+                                verbose_name="Профиль",
+                                null=True,
+                                blank=True)
     title = models.ForeignKey(Title,
                               on_delete=models.CASCADE,
                               related_name="subscriptions",
@@ -92,17 +99,19 @@ class Subscription(models.Model):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=["user", "title"],
-                                    name="uniq_subscription_user_title"),
+            models.UniqueConstraint(fields=["profile", "title"],
+                                    name="uniq_subscription_profile_title"),
         ]
 
 
 class NotificationLog(models.Model):
 
-    user = models.ForeignKey(User,
-                             on_delete=models.CASCADE,
-                             related_name="notification_logs",
-                             verbose_name="Пользователь")
+    profile = models.ForeignKey(Profile,
+                                on_delete=models.CASCADE,
+                                related_name="notification_logs",
+                                verbose_name="Профиль",
+                                null=True,
+                                blank=True)
     title = models.ForeignKey(Title,
                               on_delete=models.CASCADE,
                               related_name="notification_logs",
