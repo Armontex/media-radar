@@ -5,10 +5,10 @@ from .models import Profile, Title
 
 class TitleContext(NamedTuple):
     action: Literal["add", "delete", "not_auth"]
-    title: TitleSchema
+    title: TitleSchema | Title
 
 
-def get_search_result(search_titles: list[TitleSchema],
+def get_titles_context(titles: list[TitleSchema | Title],
                       profile: Profile | None = None) -> list[TitleContext]:
     result = []
     if profile:
@@ -22,13 +22,15 @@ def get_search_result(search_titles: list[TitleSchema],
             else:
                 source_title_id.setdefault(t.source, [t.external_id])
 
-        for t in search_titles:
-            if t.source.value in source_title_id:
-                if t.external_id in source_title_id[t.source.value]:
+        
+        for t in titles:
+            source = t.source if isinstance(t, Title) else t.source.value
+            if source in source_title_id:
+                if t.external_id in source_title_id[source]:
                     result.append(TitleContext("delete", t))
                     continue
             result.append(TitleContext("add", t))
     else:
-        for t in search_titles:
+        for t in titles:
             result.append(TitleContext("not_auth", t))
     return result

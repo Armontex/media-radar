@@ -6,9 +6,10 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from .models import Profile, Title, Subscription
 from .forms import EmailForm
-from .utils import get_search_result
+from .utils import get_titles_context
 from apps.api.enums import Source
 from apps.api import TVMazeProvider
+from typing import Iterable
 
 tvmaze = TVMazeProvider()
 
@@ -25,7 +26,7 @@ def home(request):
         "q":
         q,
         "result":
-        get_search_result(
+        get_titles_context(
             search_results,
             profile=request.user.profile if request.user.is_authenticated
             and hasattr(request.user, "profile") else None),
@@ -71,54 +72,68 @@ def not_found(request):
     return render(request, "radar/not_found.html")
 
 
+@login_required
 def add_title(request):
-    if request.user.is_authenticated:
-        prof: Profile = request.user.profile
+    prof: Profile = request.user.profile
 
-        if request.method == 'POST':
-            data = {
-                "source": request.POST.get("source"),
-                "external_id": request.POST.get("external_id"),
-            }
-            match data["source"]:
-                case Source.TVMAZE.value:
-                    title_schema = tvmaze.get_title(data["external_id"])
-                case _:
-                    raise NotImplementedError(
-                        f"Неизвестный провайдер: {data['source']}")
-            title = Title.objects.get_or_create(
-                name=title_schema.name,
-                descr=title_schema.descr,
-                cover_url=title_schema.cover_url,
-                external_id=title_schema.external_id,
-                source=title_schema.source.value,
-                is_active=title_schema.is_active)
-            subscription = Subscription.objects.create(
-                profile=prof,
-                title=title[0],
-            )
-            prof.subscriptions.add(subscription)  # type: ignore
+    if request.method == 'POST':
+        data = {
+            "source": request.POST.get("source"),
+            "external_id": request.POST.get("external_id"),
+        }
+        match data["source"]:
+            case Source.TVMAZE.value:
+                title_schema = tvmaze.get_title(data["external_id"])
+            case _:
+                raise NotImplementedError(
+                    f"Неизвестный провайдер: {data['source']}")
+        title = Title.objects.get_or_create(
+            name=title_schema.name,
+            descr=title_schema.descr,
+            cover_url=title_schema.cover_url,
+            external_id=title_schema.external_id,
+            source=title_schema.source.value,
+            is_active=title_schema.is_active)
+        subscription = Subscription.objects.create(
+            profile=prof,
+            title=title[0],
+        )
+        prof.subscriptions.add(subscription)  # type: ignore
 
     return redirect(request.META.get('HTTP_REFERER', '/'))
 
 
+@login_required
 def delete_title(request):
-    if request.user.is_authenticated:
-        prof: Profile = request.user.profile
+    prof: Profile = request.user.profile
+    if request.method == 'POST':
+        data = {
+            "source": request.POST.get("source"),
+            "external_id": request.POST.get("external_id"),
+        }
+        title = Title.objects.get(external_id=data["external_id"],
+                                  source=data["source"])
+        sub: Subscription
+        for sub in prof.subscriptions.all():  # type: ignore
+            if sub.title == title:
+                sub.delete()
 
-        if request.method == 'POST':
-            data = {
-                "source": request.POST.get("source"),
-                "external_id": request.POST.get("external_id"),
-            }
-            title = Title.objects.get(external_id=data["external_id"],
-                                      source=data["source"])
-            sub: Subscription
-            for sub in prof.subscriptions.all():  # type: ignore
-                if sub.title == title:
-                    sub.delete()
-            
-            if len(list(title.subscriptions.all())) == 0: # type: ignore
-                title.delete()
+        if len(list(title.subscriptions.all())) == 0:  # type: ignore
+            title.delete()
 
     return redirect(request.META.get('HTTP_REFERER', '/'))
+
+
+@login_required
+def subscriptions(request):
+    prof: Profile = request.user.profile
+    subs: Iterable[Subscription] = prof.subscriptions.all()  # type: ignore
+
+    titles = []
+    for sub in subs:
+        titles.append(sub.title)
+        
+    context = {
+        "subs": get_titles_context(titles, profile=prof),
+    }
+    return render(request, "radar/subscriptions.html", context)
