@@ -12,17 +12,17 @@
 @use "components/inputform";
 @use "components/header";
 
-.login__wrapper {
-  margin: 15vh auto;
-}
-
-.login__form {
+.reg__form {
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
 
-.btn--reg {
+.reg__title {
+  align-self: center;
+}
+
+.btn--tologin {
   $main-color: #367153;
   background: darken($color: $main-color, $amount: 7%);
   text-align: center;

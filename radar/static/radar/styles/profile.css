@@ -228,19 +228,4 @@ h6 {
   transform: translate(-50%);
   font-size: 32px;
   font-weight: bold;
-}
-
-.login__wrapper {
-  margin: 15vh auto;
-}
-
-.login__form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
-
-.btn--reg {
-  background: rgb(42.4562874251, 88.8437125749, 65.2568862275);
-  text-align: center;
-}/*# sourceMappingURL=login.css.map */
+}/*# sourceMappingURL=profile.css.map */

@@ -230,17 +230,17 @@ h6 {
   font-weight: bold;
 }
 
-.login__wrapper {
-  margin: 15vh auto;
-}
-
-.login__form {
+.reg__form {
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
 
-.btn--reg {
+.reg__title {
+  align-self: center;
+}
+
+.btn--tologin {
   background: rgb(42.4562874251, 88.8437125749, 65.2568862275);
   text-align: center;
-}/*# sourceMappingURL=login.css.map */
+}/*# sourceMappingURL=register.css.map */

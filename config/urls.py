@@ -17,12 +17,13 @@ Including another URLconf
 from django.contrib import admin
 from django.contrib.auth.views import LoginView
 from django.urls import path, include
-from radar.views import home, profile, register
+from radar.views import home, profile, register, not_found
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("", home, name="home"),
     path("profile/", profile, name="profile"),
+    path("subscriptions/", not_found, name="subscriptions"),
     path('account/', include('django.contrib.auth.urls')),
     path('account/',
          LoginView.as_view(redirect_authenticated_user=True),

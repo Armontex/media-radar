@@ -1,18 +1,45 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Регистрация</title>
-</head>
-<body>
-    <h2>Регистрация</h2>
+{% extends "radar/base.html" %}
+{% load static %}
 
-    <form method="post">
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'radar/styles/register.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="reg__wrapper container form__wrapper">
+    <form method="post" class="reg__form">
+        <h2 class="reg__title">Регистрация</h2>
+        
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Создать аккаунт</button>
-    </form>
 
-    <a href="{% url 'login' %}">Уже есть аккаунт</a>
-</body>
-</html>
+        <div class="form__field input-form">
+            {{ form.username.label_tag }}
+            {{ form.username }}
+        </div>
+
+        <div class="form__field input-form">
+            {{ form.password1.label_tag }}
+            {{ form.password1 }}
+
+        </div>
+
+        <div class="form__field input-form">
+            {{ form.password2.label_tag }}
+            {{ form.password2 }}
+
+        </div>
+        {% for error in form.username.errors %}
+            <p class="error">{{ error }}</p>
+        {% endfor %}
+        {% for error in form.password1.errors %}
+            <p class="error">{{ error }}</p>
+        {% endfor %}
+        {% for error in form.password2.errors %}
+            <p class="error">{{ error }}</p>
+        {% endfor %}
+
+        <button type="submit" class="btn btn--create">Создать аккаунт</button>
+        <a class="btn btn--tologin" href="{% url 'login' %}">У меня уже есть аккаунт</a>
+    </form>
+</div>
+{% endblock %}
