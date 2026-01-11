@@ -117,5 +117,8 @@ def delete_title(request):
             for sub in prof.subscriptions.all():  # type: ignore
                 if sub.title == title:
                     sub.delete()
+            
+            if len(list(title.subscriptions.all())) == 0: # type: ignore
+                title.delete()
 
     return redirect(request.META.get('HTTP_REFERER', '/'))
