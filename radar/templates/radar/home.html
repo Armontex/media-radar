@@ -1,10 +1,15 @@
 {% extends "radar/base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'radar/styles/home.css' %}" />
+{% endblock %}
 
 {% block content %}
 <div class="mediaradar__wrapper container">
-  <div class="mediaradar__search">
+  <div class="mediaradar__search form__wrapper">
     <h2 class="search__title">Поиск</h2>
-    <form method="get" class="search__form">
+    <form method="get" class="search__form input-form">
       <input name="q" class="search__input" value="{{ q }}" placeholder="Введите название...">
       <button class="search__btn btn btn--search" type="submit">Искать</button>
     </form>

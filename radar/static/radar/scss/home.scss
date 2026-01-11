@@ -8,6 +8,8 @@
 @use 'layouts/container';
 
 // Components
+@use 'components/form_wrapper';
+@use 'components/inputform';
 @use 'components/header';
 @use 'components/catalog';
 @use 'components/footer.scss';

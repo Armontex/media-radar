@@ -1,0 +1,29 @@
+{% extends "radar/base.html" %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'radar/styles/login.css' %}" />
+{% endblock %}
+
+{% block content %}
+<div class="login__wrapper container form__wrapper">
+    <h2 class="login__title">Вход</h2>
+
+    {% if form.errors %}
+        <p class="login__error">Неверный логин или пароль</p>
+    {% endif %}
+
+    <form class="login__form" method="post">
+        {% csrf_token %}
+        <div class="login__username-form login__input input-form">
+            <label class="from__label" for="id_username">Имя пользователя:</label>
+            {{ form.username }}
+        </div>
+        <div class="login__password-form login__input input-form">
+            <label class="from__label" for="id_password">Пароль:</label>
+            {{ form.password }}
+        </div>
+        <button class="btn btn--login" type="submit">Войти</button>
+    </form>
+</div>
+{% endblock %}
