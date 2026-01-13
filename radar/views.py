@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from apps.api.tvmaze import TVMazeProvider
+from apps.providers.tvmaze import TVMazeProvider
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from django.shortcuts import render, redirect
@@ -7,8 +7,8 @@ from django.contrib.auth.decorators import login_required
 from .models import Profile, Title, Subscription
 from .forms import EmailForm
 from .utils import get_titles_context
-from apps.api.enums import Source
-from apps.api import TVMazeProvider
+from apps.providers.enums import Source
+from apps.providers import TVMazeProvider
 from typing import Iterable
 
 tvmaze = TVMazeProvider()

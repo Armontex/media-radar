@@ -1,5 +1,5 @@
 from typing import NamedTuple, Literal
-from apps.api.tvmaze import TitleSchema
+from apps.providers.tvmaze import TitleSchema
 from .models import Profile
 from .models import Profile, Title
 
@@ -8,7 +8,7 @@ class TitleContext(NamedTuple):
     title: TitleSchema | Title
 
 
-def get_titles_context(titles: list[TitleSchema | Title],
+def get_titles_context(titles: list[TitleSchema] | list[Title],
                       profile: Profile | None = None) -> list[TitleContext]:
     result = []
     if profile:
