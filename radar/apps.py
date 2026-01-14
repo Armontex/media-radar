@@ -2,6 +2,7 @@ import os
 import threading
 import time
 
+from apps.core.logger import logger
 from django.apps import AppConfig
 
 
@@ -17,9 +18,10 @@ class RadarConfig(AppConfig):
 
         def worker():
             while True:
-                print("Start Notifications")
+                logger.info("Начало проверки подписок и отправки уведомлений")
                 send_notifications()
-                print("End Notifications")
+                logger.info(
+                    "Окончание проверки подписок и рассылки уведомлений")
                 time.sleep(60 * 60)  # 1 час
 
         thread = threading.Thread(target=worker, daemon=True)
