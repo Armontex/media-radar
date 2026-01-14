@@ -19,7 +19,10 @@ class UserAdmin(admin.ModelAdmin):
 
 @admin.register(Subscription)
 class SubscriptionAdmin(admin.ModelAdmin):
-    list_display = ['profile', 'title', 'is_active']
+    list_display = ['profile', 'title', 'is_active', "created_at"]
     list_filter = ['is_active']
 
-admin.site.register(NotificationLog)
+@admin.register(NotificationLog)
+class NotificationLogAdmin(admin.ModelAdmin):
+    list_display = ['profile', 'title', 'release', "notify_channel", "status", "sent_at"]
+    list_filter = ['sent_at']

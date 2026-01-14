@@ -1,6 +1,7 @@
 import smtplib
 from email.message import EmailMessage
 from ..core.config import settings
+from ..core.logger import logger
 
 
 class SMTPMailer:
@@ -25,7 +26,14 @@ class SMTPMailer:
 
     def send(self, message: EmailMessage):
         message["From"] = self._sender
-        
+
+        logger.info("Отправление письма",
+                    extra={
+                        "from": message["From"],
+                        "to": message["To"],
+                        "subject": message["Subject"],
+                        "content": message[""]
+                    })
         if not self._server:
             raise RuntimeError(
                 "Нет подключения к серверу. Используйте контекстный менеджер 'with'"

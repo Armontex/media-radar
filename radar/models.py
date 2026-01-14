@@ -71,7 +71,7 @@ class Subscription(models.Model):
                                 on_delete=models.CASCADE,
                                 related_name="subscriptions",
                                 verbose_name="Профиль",
-                                null=True,
+                                # null=True,
                                 blank=True)
     title = models.ForeignKey(Title,
                               on_delete=models.CASCADE,
@@ -127,5 +127,5 @@ class NotificationLog(models.Model):
                                       max_length=24)
     status = models.CharField("Статус уведомления",
                               choices=StatusChoices.choices,
-                              default=StatusChoices.NOT_SENT)
+                              default=StatusChoices.AWAIT)
     sent_at = models.DateTimeField("Дата отправления", null=True, default=None)

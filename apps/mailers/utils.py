@@ -8,7 +8,10 @@ def _get_template(name: str) -> str:
         return file.read()
 
 
-def fill_notify_template(title_name: str, cover_url: str | None = None) -> str:
+def fill_notify_template(title_name: str,
+                         cover_url: str | None = None,
+                         season: int | None = None,
+                         number: int | None = None) -> str:
     template = BeautifulSoup(_get_template("notify"), "html.parser")
 
     name = template.find(class_="card-name")
@@ -17,6 +20,10 @@ def fill_notify_template(title_name: str, cover_url: str | None = None) -> str:
     if cover_url:
         cover = template.find(class_="card-cover")
         cover.attrs["src"] = cover_url  # type: ignore
+
+    if season and number:
+        episode_info = template.find(class_="message-episode-info")
+        episode_info.string = f"Сезон: {season} | Серия: {number}"  # type: ignore
 
     return str(template)
 

@@ -5,6 +5,8 @@ from ..utils.http import HTTPClient
 
 
 class TVMazeProvider(ContentProvider):
+    
+    SOURCE = "TVMaze"
 
     API_BASE_URL = "https://api.tvmaze.com/"
     SHOWS_PATH = "search/shows"
@@ -34,3 +36,7 @@ class TVMazeProvider(ContentProvider):
             return [
                 map_tvmaze_ep_schema_to_release(s, title_id) for s in schemas
             ]
+
+    @property
+    def source(self) -> str:
+        return self.SOURCE

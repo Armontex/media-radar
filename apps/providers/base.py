@@ -5,6 +5,11 @@ from .schemas import TitleSchema, ReleaseSchema
 
 
 class ContentProvider(ABC):
+    
+    @property
+    @abstractmethod
+    def source(self) -> str:
+        pass
 
     @abstractmethod
     def get_titles(self, query: str) -> Iterable[TitleSchema]:

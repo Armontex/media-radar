@@ -11,7 +11,6 @@ class NotifyChannelChoices(TextChoices):
 
 
 class StatusChoices(TextChoices):
-    NOT_SENT = "not_sent"
     SUCCESSFUL = "successful"
     ERROR = "error"
     AWAIT = "await"

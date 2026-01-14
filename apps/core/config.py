@@ -13,4 +13,4 @@ class Settings(BaseSettings):
     EMAIL_SENDER: str
 
 
-settings = Settings()
+settings = Settings() # type: ignore
