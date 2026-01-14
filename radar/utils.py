@@ -3,18 +3,20 @@ from apps.providers.tvmaze import TitleSchema
 from .models import Profile
 from .models import Profile, Title
 
+
 class TitleContext(NamedTuple):
     action: Literal["add", "delete", "not_auth"]
     title: TitleSchema | Title
 
 
 def get_titles_context(titles: list[TitleSchema] | list[Title],
-                      profile: Profile | None = None) -> list[TitleContext]:
+                       profile: Profile | None = None) -> list[TitleContext]:
     result = []
     if profile:
 
         sub_titles: list[Title] = list(
-            map(lambda x: x.title, profile.subscriptions.all()))  # type: ignore
+            map(lambda x: x.title,
+                profile.subscriptions.all()))  # type: ignore
         source_title_id = {}
         for t in sub_titles:
             if t.source in source_title_id:
@@ -22,7 +24,6 @@ def get_titles_context(titles: list[TitleSchema] | list[Title],
             else:
                 source_title_id.setdefault(t.source, [t.external_id])
 
-        
         for t in titles:
             source = t.source if isinstance(t, Title) else t.source.value
             if source in source_title_id:

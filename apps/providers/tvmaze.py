@@ -5,7 +5,7 @@ from ..utils.http import HTTPClient
 
 
 class TVMazeProvider(ContentProvider):
-    
+
     SOURCE = "TVMaze"
 
     API_BASE_URL = "https://api.tvmaze.com/"

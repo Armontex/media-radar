@@ -20,8 +20,7 @@ class RadarConfig(AppConfig):
                 print("Start Notifications")
                 send_notifications()
                 print("End Notifications")
-                time.sleep(60 * 60) # 1 час
+                time.sleep(60 * 60)  # 1 час
 
         thread = threading.Thread(target=worker, daemon=True)
         thread.start()
-

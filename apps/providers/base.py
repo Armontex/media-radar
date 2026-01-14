@@ -5,7 +5,7 @@ from .schemas import TitleSchema, ReleaseSchema
 
 
 class ContentProvider(ABC):
-    
+
     @property
     @abstractmethod
     def source(self) -> str:
@@ -14,7 +14,7 @@ class ContentProvider(ABC):
     @abstractmethod
     def get_titles(self, query: str) -> Iterable[TitleSchema]:
         pass
-    
+
     @abstractmethod
     def get_title(self, title_id: int) -> TitleSchema:
         pass
