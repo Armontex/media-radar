@@ -44,11 +44,6 @@ def profile(request):
     return render(request, "radar/profile.html", context)
 
 
-# @login_required
-# def dashboard(request):
-#     return render(request, 'dashboard.html')
-
-
 def register(request):
     if request.method == 'POST':
         reg_form = UserCreationForm(request.POST)
@@ -132,7 +127,7 @@ def subscriptions(request):
     titles = []
     for sub in subs:
         titles.append(sub.title)
-        
+
     context = {
         "subs": get_titles_context(titles, profile=prof),
     }
