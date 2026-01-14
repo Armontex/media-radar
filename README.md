@@ -80,8 +80,7 @@
 ### 1. Клонирование репозитория
 
 ```bash
-git clone https://github.com/username/mediaradar.git
-cd mediaradar
+git clone https://github.com/Armontex/media-radar.git
 ```
 
 ### 2. Создание виртуального окружения
