@@ -1,6 +1,10 @@
+import requests
+import json
+from django.http import HttpRequest
 from typing import NamedTuple, Literal
 from apps.providers.tvmaze import TitleSchema
-from .models import Profile
+from apps.core.config import settings
+from apps.core.logger import logger
 from .models import Profile, Title
 
 
@@ -35,3 +39,30 @@ def get_titles_context(titles: list[TitleSchema] | list[Title],
         for t in titles:
             result.append(TitleContext("not_auth", t))
     return result
+
+
+def check_captcha(token: str, ip: str):
+    resp = requests.post("https://smartcaptcha.cloud.yandex.ru/validate",
+                         data={
+                             "secret":
+                             settings.CAPTCHA_SERVER_KEY.get_secret_value(),
+                             "token":
+                             token,
+                             "ip":
+                             ip
+                         },
+                         timeout=1)
+    server_output = resp.content.decode()
+    if resp.status_code != 200:
+        logger.warning(
+            f"Allow access due to an error: code={resp.status_code}; message={server_output}",
+        )
+        return True
+    return json.loads(server_output)["status"] == "ok"
+
+
+def get_client_ip(request: HttpRequest):
+    x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+    if x_forwarded_for:
+        return x_forwarded_for.split(',')[0].strip()
+    return request.META.get('REMOTE_ADDR')

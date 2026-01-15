@@ -11,12 +11,7 @@
 @use "components/form_wrapper";
 @use "components/inputform";
 @use "components/header";
-
-.reg__form {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-}
+@use "components/form";
 
 .reg__title {
   align-self: center;

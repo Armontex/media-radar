@@ -10,6 +10,8 @@ class Settings(BaseSettings):
     EMAIL_PORT: int = 465
     EMAIL_APP_PASSWORD: SecretStr
     EMAIL_SENDER: str
+    CAPTCHA_SERVER_KEY: SecretStr
+    CAPTCHA_CLIENT_KEY: str
 
 
 settings = Settings()  # type: ignore

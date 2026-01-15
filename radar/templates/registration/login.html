@@ -13,7 +13,7 @@
         <p class="login__error">Неверный логин или пароль</p>
     {% endif %}
 
-    <form class="login__form" method="post">
+    <form class="login__form form" method="post">
         {% csrf_token %}
         <div class="login__username-form login__input input-form">
             <label class="from__label" for="{{ form.username.id_for_label }}">Имя пользователя:</label>
@@ -23,6 +23,7 @@
             <label class="from__label" for="{{ form.password.id_for_label }}">Пароль:</label>
             {{ form.password }}
         </div>
+
         <button class="btn btn--login" type="submit">Войти</button>
         <a class="btn btn--reg" href="{% url 'register' %}">Регистрация</a>
     </form>

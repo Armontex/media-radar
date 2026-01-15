@@ -4,17 +4,18 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.http import HttpRequest
 from .models import Profile, Title, Subscription
 from .forms import EmailForm
-from .utils import get_titles_context
+from .utils import get_titles_context, check_captcha, get_client_ip
 from apps.providers.enums import Source
 from apps.providers import TVMazeProvider
-from typing import Iterable
+from apps.core.config import settings
 
 tvmaze = TVMazeProvider()
 
 
-def home(request):
+def home(request: HttpRequest):
     q = (request.GET.get("q") or "").strip()
 
     search_results = []
@@ -28,7 +29,8 @@ def home(request):
         "result":
         get_titles_context(
             search_results,
-            profile=request.user.profile if request.user.is_authenticated
+            profile=request.user.profile # type: ignore 
+            if request.user.is_authenticated  
             and hasattr(request.user, "profile") else None),
     }
 
@@ -36,40 +38,52 @@ def home(request):
 
 
 @login_required
-def profile(request):
-    prof = request.user.profile
+def profile(request: HttpRequest):
+    prof = request.user.profile  # type: ignore
     context = {
         "profile": prof,
     }
     return render(request, "radar/profile.html", context)
 
 
-def register(request):
+def register(request: HttpRequest):
+
+    reg_form = UserCreationForm()
+    email_form = EmailForm()
+    html = 'registration/register.html'
+    context = {
+        "reg_form": reg_form,
+        "email_form": email_form,
+        "captcha_client_key": settings.CAPTCHA_CLIENT_KEY
+    }
+
     if request.method == 'POST':
-        reg_form = UserCreationForm(request.POST)
-        email_form = EmailForm(request.POST)
-        if reg_form.is_valid() and email_form.is_valid():
-            user = reg_form.save()
-            Profile.objects.get_or_create(
-                user=user, email=email_form.cleaned_data['email'])
-            login(request, user)
-            return redirect('/profile')
-    else:
-        reg_form = UserCreationForm()
-        email_form = EmailForm()
+        captcha_token = request.POST.get('smart-token', "")
+        ip = get_client_ip(request)
 
-    context = {'reg_form': reg_form, "email_form": email_form}
+        if check_captcha(captcha_token, ip):  # type: ignore
+            reg_form = UserCreationForm(request.POST)
+            email_form = EmailForm(request.POST)
 
-    return render(request, 'registration/register.html', context)
+            if reg_form.is_valid() and email_form.is_valid():
+                user = reg_form.save()
+                Profile.objects.get_or_create(
+                    user=user, email=email_form.cleaned_data['email'])
+                login(request, user)
+                return redirect('/profile')
+        else:
+            context.setdefault("is_captcha_error", True)
+
+    return render(request, html, context)
 
 
-def not_found(request):
+def not_found(request: HttpRequest):
     return render(request, "radar/not_found.html")
 
 
 @login_required
-def add_title(request):
-    prof: Profile = request.user.profile
+def add_title(request: HttpRequest):
+    prof: Profile = request.user.profile  # type: ignore
 
     if request.method == 'POST':
         data = {
@@ -78,7 +92,8 @@ def add_title(request):
         }
         match data["source"]:
             case Source.TVMAZE.value:
-                title_schema = tvmaze.get_title(data["external_id"])
+                title_schema = tvmaze.get_title(
+                    data["external_id"])  # type: ignore
             case _:
                 raise NotImplementedError(
                     f"Неизвестный провайдер: {data['source']}")
@@ -99,8 +114,8 @@ def add_title(request):
 
 
 @login_required
-def delete_title(request):
-    prof: Profile = request.user.profile
+def delete_title(request: HttpRequest):
+    prof: Profile = request.user.profile  # type: ignore
     if request.method == 'POST':
         data = {
             "source": request.POST.get("source"),
@@ -120,9 +135,9 @@ def delete_title(request):
 
 
 @login_required
-def subscriptions(request):
-    prof: Profile = request.user.profile
-    subs: Iterable[Subscription] = prof.subscriptions.all()  # type: ignore
+def subscriptions(request: HttpRequest):
+    prof: Profile = request.user.profile  # type: ignore
+    subs = Subscription.objects.filter(profile=prof)
 
     titles = []
     for sub in subs:

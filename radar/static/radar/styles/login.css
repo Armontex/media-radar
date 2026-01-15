@@ -147,6 +147,10 @@ h6 {
   font-size: 28px;
 }
 
+.error {
+  color: rgb(236, 72, 91);
+}
+
 :root {
   --font-family: "Poppins", sans-serif;
   --second-family: "Inter", sans-serif;
@@ -157,6 +161,7 @@ h6 {
   --btn-bg: rgb(180, 181, 181);
   --placeholder-color: #cdcdcd;
   --main-color: #367153;
+  --main-color: #295e43;
   --title-fontsize: 28px;
 }
 
@@ -230,14 +235,14 @@ h6 {
   font-weight: bold;
 }
 
-.login__wrapper {
-  margin: 15vh auto;
-}
-
-.login__form {
+.form {
   display: flex;
   flex-direction: column;
   gap: 15px;
+}
+
+.login__wrapper {
+  margin: 15vh auto;
 }
 
 .btn--reg {

@@ -5,56 +5,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     {% block extra_css %}{% endblock %}
+    {% block scripts %}{% endblock %}
     <title>MediaRadar</title>
   </head>
 
   <body>
     <header>
-      <div class="header__wrapper container">
-        <nav class="header__nav">
-          <a href="/" id="logo">MediaRadar</a>
-          <ul class="nav__list">
-            <li class="nav__item">
-              {% if user.is_authenticated %}
-                <a href="{% url 'subscriptions' %}" class="nav__item-link">
-                  <img
-                    src="{% static 'radar/icons/subscriptions.svg' %}"
-                    alt="subscriptions"
-                    class="nav__item-icon nav__item-icon--subs"
-                  />
-                  <span class="nav__item-text">Мои подписки</span>
-                </a>
-              {% else %}
-                <a href="{% url 'login' %}" class="nav__item-link">
-                  <img
-                    src="{% static 'radar/icons/subscriptions.svg' %}"
-                    alt="subscriptions"
-                    class="nav__item-icon nav__item-icon--subs"
-                  />
-                  <span class="nav__item-text">Мои подписки</span>
-                </a>
-              {% endif %}
-            </li>
-            <li class="nav__item">
-              {% if user.is_authenticated %}
-                <a href="{% url 'profile' %}" class="nav__item-link"
-                  ><img
-                    src="{% static 'radar/icons/account_circle.svg' %}"
-                    alt="profile"
-                    class="nav__item-icon nav__item--account"
-                /></a>
-              {% else %}
-                <a href="{% url 'login' %}" class="nav__item-link"
-                  ><img
-                    src="{% static 'radar/icons/account_circle.svg' %}"
-                    alt="login"
-                    class="nav__item-icon nav__item--account"
-                /></a>
-              {% endif %}
-            </li>
-          </ul>
-        </nav>
-      </div>
+      {% include "radar/components/header.html" %}
     </header>
     <main>{% block content %}{% endblock %}</main>
   </body>
