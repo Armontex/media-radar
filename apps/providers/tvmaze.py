@@ -9,8 +9,8 @@ class TVMazeProvider(ContentProvider):
     SOURCE = "TVMaze"
 
     API_BASE_URL = "https://api.tvmaze.com/"
-    SHOWS_PATH = "search/shows"
-    SHOW_PATH = "shows/{title_id}"
+    SHOWS_PATH = "/search/shows"
+    SHOW_PATH = "/shows/{title_id}"
     EPISODES_PATH = SHOW_PATH + "/episodes"
 
     def get_titles(self, query: str) -> list[TitleSchema]:

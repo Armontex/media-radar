@@ -104,18 +104,19 @@ def add_title(request: HttpRequest):
             case _:
                 raise NotImplementedError(
                     f"Неизвестный провайдер: {data['source']}")
-        title = Title.objects.get_or_create(
+        title, created = Title.objects.get_or_create(
             name=title_schema.name,
             descr=title_schema.descr,
             cover_url=title_schema.cover_url,
             external_id=title_schema.external_id,
             source=title_schema.source.value,
             is_active=title_schema.is_active)
-        subscription = Subscription.objects.create(
+        Subscription.objects.create(
             profile=prof,
-            title=title[0],
+            title=title,
+            notify_channel=prof.main_channel,
+            is_active=title.is_active
         )
-        prof.subscriptions.add(subscription)  # type: ignore
 
     return redirect(request.META.get('HTTP_REFERER', '/'))
 

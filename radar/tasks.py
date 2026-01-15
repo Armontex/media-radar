@@ -4,7 +4,7 @@ from django.utils import timezone
 from radar.models import Title, Subscription, NotificationLog, Release, Profile
 from radar.choices import StatusChoices, NotifyChannelChoices
 from apps.providers import TVMazeProvider, ContentProvider
-from apps.mailers.smtp import GmailMailer
+from apps.mailers import GmailMailer, TelegramMailer
 from apps.mailers.utils import build_email_message, fill_notify_template
 from apps.core.config import settings
 
@@ -62,6 +62,29 @@ def notify_email(profile: Profile, title: Title, log: NotificationLog) -> bool:
         return False
 
 
+def notify_telegram(profile: Profile, title: Title,
+                    log: NotificationLog) -> bool:
+    mailer = TelegramMailer(settings.BOT_TOKEN.get_secret_value())
+
+    try:
+        text = f"""‼️ Уведомление о новом выпуске ‼️
+
+[{title.name}]
+Сезон: {log.release.season} | Серия: {log.release.number}
+    """
+        if profile.telegram_id:
+            mailer.send(profile.telegram_id,
+                        text=text,
+                        image_url=title.cover_url)
+            log.status = StatusChoices.SUCCESSFUL
+            return True
+        log.status = StatusChoices.ERROR
+        return False
+    except Exception:
+        log.status = StatusChoices.ERROR
+        return False
+
+
 def notify(sub: Subscription, release: Release) -> None:
 
     log = NotificationLog.objects.create(
@@ -75,6 +98,11 @@ def notify(sub: Subscription, release: Release) -> None:
     success = False
     if sub.notify_channel == NotifyChannelChoices.EMAIL:
         success = notify_email(sub.profile, sub.title, log)
+    elif sub.notify_channel == NotifyChannelChoices.TELEGRAM:
+        success = notify_telegram(sub.profile, sub.title, log)
+    else:
+        raise NotImplementedError(
+            f"Неизвестный канал уведомлений: {sub.notify_channel}")
 
     if not success:
         log.status = StatusChoices.ERROR

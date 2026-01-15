@@ -67,12 +67,11 @@ class Profile(models.Model):
 
 class Subscription(models.Model):
 
-    profile = models.ForeignKey(
-        Profile,
-        on_delete=models.CASCADE,
-        related_name="subscriptions",
-        verbose_name="Профиль",
-        blank=True)
+    profile = models.ForeignKey(Profile,
+                                on_delete=models.CASCADE,
+                                related_name="subscriptions",
+                                verbose_name="Профиль",
+                                blank=True)
     title = models.ForeignKey(Title,
                               on_delete=models.CASCADE,
                               related_name="subscriptions",
