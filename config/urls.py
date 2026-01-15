@@ -18,18 +18,19 @@ from django.contrib import admin
 from django.contrib.auth.views import LoginView
 from django.urls import path, include
 from radar.views import (home, profile, register, add_title,
-                         delete_title, subscriptions)
+                         delete_title, subscriptions, telegram_auth)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("", home, name="home"),
     path("profile/", profile, name="profile"),
     path("subscriptions/", subscriptions, name="subscriptions"),
-    path('account/', include('django.contrib.auth.urls')),
-    path('account/',
+    path('auth/', include('django.contrib.auth.urls')),
+    path('auth/',
          LoginView.as_view(redirect_authenticated_user=True),
          name='login'),
-    path('account/register/', register, name='register'),
+    path('auth/register/', register, name='register'),
     path('subscriptions/add/', add_title, name='subscriptions_add'),
-    path('subscriptions/delete/', delete_title, name='subscriptions_delete')
+    path('subscriptions/delete/', delete_title, name='subscriptions_delete'),
+    path('auth/telegram/', telegram_auth, name='telegram_auth')
 ]

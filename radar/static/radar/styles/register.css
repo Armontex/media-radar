@@ -241,6 +241,10 @@ h6 {
   gap: 15px;
 }
 
+.telegram-widjet-auth {
+  align-self: center;
+}
+
 .reg__title {
   align-self: center;
 }

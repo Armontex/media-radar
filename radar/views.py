@@ -1,18 +1,25 @@
+import json
+
 from django.shortcuts import render
-from apps.providers.tvmaze import TVMazeProvider
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth import login
+from django.contrib.auth import login, get_user_model
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.http import HttpRequest
+from django.http import HttpRequest, JsonResponse
+
 from .models import Profile, Title, Subscription
 from .forms import EmailForm
-from .utils import get_titles_context, check_captcha, get_client_ip
+from .utils import (get_titles_context, check_captcha, get_client_ip,
+                    verify_telegram_auth)
+from .choices import NotifyChannelChoices
+
 from apps.providers.enums import Source
 from apps.providers import TVMazeProvider
 from apps.core.config import settings
 
 tvmaze = TVMazeProvider()
+
+User = get_user_model()
 
 
 def home(request: HttpRequest):
@@ -29,8 +36,8 @@ def home(request: HttpRequest):
         "result":
         get_titles_context(
             search_results,
-            profile=request.user.profile # type: ignore 
-            if request.user.is_authenticated  
+            profile=request.user.profile  # type: ignore 
+            if request.user.is_authenticated
             and hasattr(request.user, "profile") else None),
     }
 
@@ -147,3 +154,31 @@ def subscriptions(request: HttpRequest):
         "subs": get_titles_context(titles, profile=prof),
     }
     return render(request, "radar/subscriptions.html", context)
+
+
+def telegram_auth(request: HttpRequest):
+    if request.method != "POST":
+        return JsonResponse({"error": "Method not allowed"}, status=405)
+
+    try:
+        data = json.loads(request.body.decode("utf-8"))
+    except json.JSONDecodeError:
+        return JsonResponse({"error": "Invalid JSON"}, status=400)
+
+    if not verify_telegram_auth(data, settings.BOT_TOKEN.get_secret_value()):
+        return JsonResponse({"error": "Invalid Telegram data"}, status=400)
+
+    tg_id = data.get("id")
+    username = f"tg_{data.get("username")}" or f"tg_{tg_id}"
+
+    profile = Profile.objects.filter(telegram_id=tg_id).first()
+    if profile:
+        user = profile.user
+    else:
+        user = User.objects.create(username=username)
+        Profile.objects.create(user=user,
+                               telegram_id=tg_id,
+                               main_channel=NotifyChannelChoices.TELEGRAM)
+    login(request, user)
+
+    return JsonResponse({"status": "ok"})

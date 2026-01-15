@@ -23,9 +23,9 @@
             <label class="from__label" for="{{ form.password.id_for_label }}">Пароль:</label>
             {{ form.password }}
         </div>
-
         <button class="btn btn--login" type="submit">Войти</button>
         <a class="btn btn--reg" href="{% url 'register' %}">Регистрация</a>
     </form>
+    {% include "radar/components/telegram-widjet.html" %}
 </div>
 {% endblock %}

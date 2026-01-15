@@ -241,6 +241,10 @@ h6 {
   gap: 15px;
 }
 
+.telegram-widjet-auth {
+  align-self: center;
+}
+
 .login__wrapper {
   margin: 15vh auto;
 }

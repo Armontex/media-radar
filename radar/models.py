@@ -72,7 +72,6 @@ class Subscription(models.Model):
         on_delete=models.CASCADE,
         related_name="subscriptions",
         verbose_name="Профиль",
-        # null=True,
         blank=True)
     title = models.ForeignKey(Title,
                               on_delete=models.CASCADE,

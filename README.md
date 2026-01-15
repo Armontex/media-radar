@@ -86,12 +86,14 @@ git clone https://github.com/Armontex/media-radar.git
 ### 2. Создание виртуального окружения
 
 **Linux/MacOS:**
+
 ```bash
 python3 -m venv venv
 source venv/bin/activate
 ```
 
 **Windows:**
+
 ```bash
 python -m venv venv
 venv\Scripts\activate
@@ -103,7 +105,15 @@ venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### 4. Создание файла .env (опционально)
+### 4. Создание каптчи
+
+1. [Быстрый старт по созданию YandexSmartCaptcha](https://yandex.cloud/ru/docs/smartcaptcha/quickstart)
+
+### 5. Создание бота
+
+1. [Создать Telegram-bot](https://core.telegram.org/bots#3-how-do-i-create-a-bot)
+
+### 6. Создание файла .env (опционально)
 
 ```bash
 # .env
@@ -112,15 +122,18 @@ DEBUG=True
 DATABASE_URL=sqlite:///db.sqlite3
 EMAIL_SENDER=your-email@gmail.com
 EMAIL_APP_PASSWORD=your-app-password
+CAPTCHA_SERVER_KEY=your-captcha-server-key
+CAPTCHA_CLIENT_KEY=your-captcha-client-key
+BOT_TOKEN=your-bot-token
 ```
 
-### 5. Миграции БД
+### 7. Миграции БД
 
 ```bash
 python manage.py migrate
 ```
 
-### 6. Создание суперпользователя (администратора)
+### 8. Создание суперпользователя (администратора)
 
 ```bash
 python manage.py createsuperuser
@@ -139,15 +152,14 @@ python manage.py runserver
 Приложение будет доступно по адресу: `http://127.0.0.1:8000`
 
 **Для доступа в админ-панель:**
-```
-http://127.0.0.1:8000/admin
-```
+
+`http://127.0.0.1:8000/admin`
 
 ---
 
-## 📂 Структура проекта
+## 📂 Структура проекта (# FIXME: Исправить)
 
-```
+```tree
 .
 ├── apps
 │   ├── core

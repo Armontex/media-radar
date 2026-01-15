@@ -29,7 +29,7 @@ DEBUG = os.getenv("DEBUG") == "True"
 
 DATABASE_URL = str(os.getenv("DATABASE_URL"))
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'mediaradar.loca.lt']
 
 # Application definition
 
@@ -121,7 +121,13 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-LOGIN_URL = '/account/login/'
+LOGIN_URL = '/auth/login/'
 LOGIN_REDIRECT_URL = '/profile/'
-LOGOUT_REDIRECT_URL = '/account/login/'
+LOGOUT_REDIRECT_URL = '/auth/login/'
 APPEND_SLASH = True
+
+SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://mediaradar.loca.lt",
+]

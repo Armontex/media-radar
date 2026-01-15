@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     EMAIL_SENDER: str
     CAPTCHA_SERVER_KEY: SecretStr
     CAPTCHA_CLIENT_KEY: str
+    BOT_TOKEN: SecretStr
 
 
 settings = Settings()  # type: ignore

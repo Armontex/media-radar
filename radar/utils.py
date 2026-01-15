@@ -1,5 +1,7 @@
 import requests
 import json
+import hashlib
+import hmac
 from django.http import HttpRequest
 from typing import NamedTuple, Literal
 from apps.providers.tvmaze import TitleSchema
@@ -66,3 +68,13 @@ def get_client_ip(request: HttpRequest):
     if x_forwarded_for:
         return x_forwarded_for.split(',')[0].strip()
     return request.META.get('REMOTE_ADDR')
+
+
+def verify_telegram_auth(data: dict, bot_token: str) -> bool:
+    hash_received = data.pop('hash')
+    check_list = [f"{k}={v}" for k, v in sorted(data.items())]
+    data_check_string = "\n".join(check_list).encode()
+    secret_key = hashlib.sha256(bot_token.encode()).digest()
+    calculated = hmac.new(secret_key, data_check_string,
+                          hashlib.sha256).hexdigest()
+    return calculated == hash_received

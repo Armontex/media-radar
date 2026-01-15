@@ -56,5 +56,6 @@
         <button type="submit" class="btn btn--create">Создать аккаунт</button>
         <a class="btn btn--tologin" href="{% url 'login' %}">У меня уже есть аккаунт</a>
     </form>
+    {% include "radar/components/telegram-widjet.html" %}
 </div>
 {% endblock %}

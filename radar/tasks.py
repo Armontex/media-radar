@@ -77,6 +77,7 @@ def notify(sub: Subscription, release: Release) -> None:
         success = notify_email(sub.profile, sub.title, log)
 
     if not success:
+        log.status = StatusChoices.ERROR
         log.save(update_fields=["status"])
         return
 
