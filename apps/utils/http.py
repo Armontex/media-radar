@@ -1,4 +1,7 @@
 import requests
+import re
+from typing import Callable, Any
+from dataclasses import dataclass
 from urllib.parse import urljoin
 from enum import Enum
 from ..core.logger import logger
@@ -9,13 +12,28 @@ class RequestMethod(Enum):
     POST = "POST"
 
 
+@dataclass(frozen=True)
+class UrlRedactor:
+
+    patterns: tuple[re.Pattern, ...] = (re.compile(r"(/bot)([^/]+)(/)"), )
+
+    def __call__(self, url: str) -> str:
+        for p in self.patterns:
+            url = p.sub(r"\1***REDACTED***\3", url)
+        return url
+
+
 class HTTPClient:
 
     DEFAULT_TIMEOUT = 5  # Seconds
 
-    def __init__(self, base_url: str) -> None:
+    def __init__(self,
+                 base_url: str,
+                 *,
+                 redactor: Callable[[Any], str] = lambda x: x) -> None:
         self._session = requests.Session()
         self._base_url = base_url
+        self._redactor = redactor
 
     @property
     def base_url(self) -> str:
@@ -26,12 +44,13 @@ class HTTPClient:
                  path: str = "",
                  **kwargs) -> requests.Response:
         url = urljoin(self._base_url, path)
+        safe_url = self._redactor(url)
         kwargs.setdefault("timeout", self.DEFAULT_TIMEOUT)
 
         logger.info("Выполняется запрос",
                     extra={
                         "method": method.value,
-                        "url": url
+                        "url": safe_url
                     })
 
         response = self._session.request(method.value, url, **kwargs)
@@ -43,7 +62,7 @@ class HTTPClient:
                 "HTTP ошибка",
                 extra={
                     "method": method.value,
-                    "url": url,
+                    "url": safe_url,
                     "status": response.status_code,
                     "body": response.text,
                 },
@@ -55,7 +74,7 @@ class HTTPClient:
                 "Ошибка запроса",
                 extra={
                     "method": method.value,
-                    "url": url,
+                    "url": safe_url,
                     "error": str(e),
                 },
             )

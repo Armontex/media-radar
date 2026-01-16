@@ -1,4 +1,4 @@
-from ..utils.http import HTTPClient
+from ..utils.http import HTTPClient, UrlRedactor
 
 
 class TelegramMailer:
@@ -11,7 +11,7 @@ class TelegramMailer:
         self._token = token
 
     def _send_text(self, chat_id: int, text: str) -> None:
-        with HTTPClient(self.BASE_URL) as client:
+        with HTTPClient(self.BASE_URL, redactor=UrlRedactor()) as client:
             client.post(self.SEND_TEXT_PATH.format(token=self._token),
                         json={
                             "chat_id": chat_id,
@@ -23,7 +23,7 @@ class TelegramMailer:
                     *,
                     image_url: str,
                     caption: str = "") -> None:
-        with HTTPClient(self.BASE_URL) as client:
+        with HTTPClient(self.BASE_URL, redactor=UrlRedactor()) as client:
             client.post(self.SEND_PHOTO_PATH.format(token=self._token),
                         json={
                             "chat_id": chat_id,
