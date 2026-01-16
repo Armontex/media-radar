@@ -8,16 +8,17 @@ from apps.providers.tvmaze import TitleSchema
 from apps.core.config import settings
 from apps.core.logger import logger
 from .models import Profile, Title
+from .mappers import title_to_schema
 
 
 class TitleContext(NamedTuple):
     action: Literal["add", "delete", "not_auth"]
-    title: TitleSchema | Title
+    title: TitleSchema
 
 
 def get_titles_context(titles: list[TitleSchema] | list[Title],
                        profile: Profile | None = None) -> list[TitleContext]:
-    result = []
+    result: list[TitleContext] = []
     if profile:
 
         sub_titles: list[Title] = list(
@@ -34,12 +35,15 @@ def get_titles_context(titles: list[TitleSchema] | list[Title],
             source = t.source if isinstance(t, Title) else t.source.value
             if source in source_title_id:
                 if t.external_id in source_title_id[source]:
-                    result.append(TitleContext("delete", t))
+                    result.append(TitleContext("delete", t if isinstance(
+                        t, TitleSchema) else title_to_schema(t)))
                     continue
-            result.append(TitleContext("add", t))
+            result.append(TitleContext("add", t if isinstance(
+                t, TitleSchema) else title_to_schema(t)))
     else:
         for t in titles:
-            result.append(TitleContext("not_auth", t))
+            result.append(TitleContext("not_auth", t if isinstance(
+                t, TitleSchema) else title_to_schema(t)))
     return result
 
 

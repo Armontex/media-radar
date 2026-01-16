@@ -151,6 +151,14 @@ h6 {
   color: rgb(236, 72, 91);
 }
 
+select {
+  border: 1px #fff solid;
+  border-radius: 5px;
+}
+select option {
+  color: #000;
+}
+
 :root {
   --font-family: "Poppins", sans-serif;
   --second-family: "Inter", sans-serif;
@@ -235,17 +243,33 @@ h6 {
   font-weight: bold;
 }
 
-.profile__info {
+.form {
   display: flex;
   flex-direction: column;
   gap: 15px;
-  align-items: center;
 }
 
-.profile-label {
-  font-weight: 600;
+.telegram-widjet-auth {
+  align-self: center;
+}
+
+.profile__wrapper {
+  align-items: normal;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+
+.profile-field {
+  display: flex;
+  align-items: center;
 }
 
 .profile__logout-btn {
   margin-top: 25px;
+  align-self: center;
+}
+
+.social-binding {
+  display: flex;
+  gap: 10px;
 }/*# sourceMappingURL=profile.css.map */

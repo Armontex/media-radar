@@ -11,18 +11,25 @@
 @use 'components/form_wrapper';
 @use 'components/inputform';
 @use 'components/header';
+@use "components/form";
+@use "components/telegram_widjet";
 
-.profile__info {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    align-items: center;
+.profile__wrapper {
+    align-items: normal;
+    width: fit-content;
 }
 
-.profile-label {
-    font-weight: 600;
+.profile-field {
+    display: flex;
+    align-items: center;
 }
 
 .profile__logout-btn {
     margin-top: 25px;
+    align-self: center;
+}
+
+.social-binding {
+    display: flex;
+    gap: 10px;
 }

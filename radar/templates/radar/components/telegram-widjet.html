@@ -28,6 +28,9 @@
           if (data.status === "ok") {
             window.location = "/profile/";
           }
+          else if (data.status === "error") {
+            alert(data.detail)
+          }
         });
     }
   </script>

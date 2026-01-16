@@ -18,12 +18,13 @@ from django.contrib import admin
 from django.contrib.auth.views import LoginView
 from django.urls import path, include
 from radar.views import (home, profile, register, add_title,
-                         delete_title, subscriptions, telegram_auth)
+                         delete_title, subscriptions, telegram_auth, set_channel)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("", home, name="home"),
     path("profile/", profile, name="profile"),
+    path("profile/channel/", set_channel, name="profile_channel"),
     path("subscriptions/", subscriptions, name="subscriptions"),
     path('auth/', include('django.contrib.auth.urls')),
     path('auth/',
@@ -34,3 +35,5 @@ urlpatterns = [
     path('subscriptions/delete/', delete_title, name='subscriptions_delete'),
     path('auth/telegram/', telegram_auth, name='telegram_auth')
 ]
+
+handler404 = "radar.views.page_not_found"

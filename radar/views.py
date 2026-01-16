@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest, JsonResponse
 
 from .models import Profile, Title, Subscription
-from .forms import EmailForm
+from .forms import EmailForm, NotifyChannelForm
 from .utils import (get_titles_context, check_captcha, get_client_ip,
                     verify_telegram_auth)
 from .choices import NotifyChannelChoices
@@ -36,7 +36,7 @@ def home(request: HttpRequest):
         "result":
         get_titles_context(
             search_results,
-            profile=request.user.profile  # type: ignore 
+            profile=request.user.profile  # type: ignore
             if request.user.is_authenticated
             and hasattr(request.user, "profile") else None),
     }
@@ -46,11 +46,35 @@ def home(request: HttpRequest):
 
 @login_required
 def profile(request: HttpRequest):
-    prof = request.user.profile  # type: ignore
-    context = {
+    prof: Profile = request.user.profile  # type: ignore
+
+    if request.method == "POST":
+        email_form = EmailForm(request.POST)
+        if email_form.is_valid():
+            prof.email = email_form.cleaned_data["email"]
+            prof.save()
+            return redirect("profile")
+    else:
+        email_form = EmailForm()
+        channel_form = NotifyChannelForm(
+            initial={"channel": prof.main_channel})
+
+    return render(request, "radar/profile.html", {
         "profile": prof,
-    }
-    return render(request, "radar/profile.html", context)
+        "email_form": email_form,
+        "channel_form": channel_form
+    })
+
+
+@login_required
+def set_channel(request: HttpRequest):
+    prof: Profile = request.user.profile  # type: ignore
+    if request.method == "POST":
+        form = NotifyChannelForm(request.POST)
+        if form.is_valid():
+            prof.main_channel = form.cleaned_data["channel"]
+            prof.save()
+    return redirect("profile")
 
 
 def register(request: HttpRequest):
@@ -84,8 +108,8 @@ def register(request: HttpRequest):
     return render(request, html, context)
 
 
-def not_found(request: HttpRequest):
-    return render(request, "radar/not_found.html")
+def page_not_found(request: HttpRequest, exception):
+    return render(request, "radar/404.html", status=404)
 
 
 @login_required
@@ -104,17 +128,20 @@ def add_title(request: HttpRequest):
             case _:
                 raise NotImplementedError(
                     f"Неизвестный провайдер: {data['source']}")
-        title, created = Title.objects.get_or_create(
-            name=title_schema.name,
-            descr=title_schema.descr,
-            cover_url=title_schema.cover_url,
-            external_id=title_schema.external_id,
+        title, _ = Title.objects.get_or_create(
             source=title_schema.source.value,
-            is_active=title_schema.is_active)
+            external_id=title_schema.external_id,
+            defaults={
+                "name": title_schema.name,
+                "descr": title_schema.descr,
+                "cover_url": title_schema.cover_url,
+                "is_active": title_schema.is_active,
+            }
+        )
+
         Subscription.objects.create(
             profile=prof,
             title=title,
-            notify_channel=prof.main_channel,
             is_active=title.is_active
         )
 
@@ -172,14 +199,32 @@ def telegram_auth(request: HttpRequest):
     tg_id = data.get("id")
     username = f"tg_{data.get("username")}" or f"tg_{tg_id}"
 
-    profile = Profile.objects.filter(telegram_id=tg_id).first()
-    if profile:
+    if request.user.is_authenticated:
+        profile = Profile.objects.get(user=request.user)
         user = profile.user
+        if not profile.telegram_id:
+            if Profile.objects.filter(telegram_id=tg_id):
+                return JsonResponse(
+                    {
+                        "status": "error",
+                        "code": "telegram_id_already_bound",
+                        "detail": "Этот Telegram уже привязан к другому аккаунту.",
+                    },
+                    status=409,
+                )
+            profile.telegram_id = tg_id
+            profile.save(update_fields=["telegram_id"])
     else:
-        user = User.objects.create(username=username)
-        Profile.objects.create(user=user,
-                               telegram_id=tg_id,
-                               main_channel=NotifyChannelChoices.TELEGRAM)
-    login(request, user)
+        profile = Profile.objects.filter(telegram_id=tg_id).first()
+        if profile:
+            user = profile.user
+        else:
+            user = User.objects.create(username=username)
+            Profile.objects.create(
+                user=user,
+                telegram_id=tg_id,
+                main_channel=NotifyChannelChoices.TELEGRAM,
+            )
 
+    login(request, user)
     return JsonResponse({"status": "ok"})

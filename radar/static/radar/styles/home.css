@@ -151,6 +151,14 @@ h6 {
   color: rgb(236, 72, 91);
 }
 
+select {
+  border: 1px #fff solid;
+  border-radius: 5px;
+}
+select option {
+  color: #000;
+}
+
 :root {
   --font-family: "Poppins", sans-serif;
   --second-family: "Inter", sans-serif;

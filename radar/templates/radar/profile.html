@@ -1,25 +1,60 @@
-{% extends "radar/base.html" %} 
-{% load static %}
-
-{% block extra_css %}
+{% extends "radar/base.html" %} {% load static %} {% block extra_css %}
 <link rel="stylesheet" href="{% static 'radar/styles/profile.css' %}" />
-{% endblock %} 
-
-{% block content %}
+{% endblock %} {% block content %}
 <div class="profile__wrapper container form__wrapper">
-    <div class="profile__info">
-        <div class="profile__username-field">
-            <label for="id_username" class="username__label profile-label">Имя пользователя:</label>
-            <span class="username__text">{{ user.username }}</span>
-        </div>
-        <div class="profile__email-field">
-            <label for="id_email" class="email__label profile-label">Email:</label>
-            <span class="email__text">{{ profile.email }}</span>
-        </div>
-        <form method="post" class="profile__logout-btn" action="{% url 'logout' %}">
-            {% csrf_token %}
-            <button type="submit">Выйти</button>
-        </form>
-    </div>
+  <div class="profile-field profile-field--username input-form">
+    <label for="id_username" class="username__label profile-label"
+      >Имя пользователя:</label
+    >
+    <span class="username__text">{{ user.username }}</span>
+  </div>
+  {% if profile.email %}
+  <div class="profile-field profile-field--email input-form">
+    <label
+      for="{{ email_form.email.id_for_label }}"
+      class="email__label profile-label"
+      >Email:</label
+    >
+    <span class="email__text">{{ profile.email }}</span>
+  </div>
+  {% else %}
+  <form method="post" class="profile-field profile-field--email input-form">
+    {% csrf_token %}
+    <label
+      for="{{ email_form.email.id_for_label }}"
+      class="email__label profile-label"
+      >Email:</label
+    >
+    {{ email_form.email }}
+    <button type="submit">Сохранить</button>
+  </form>
+  {% endif %}
+  <!-- Выбор варианта отправки уведомлений если есть 2 привязки -->
+
+  {% if profile.telegram_id and profile.email %}
+  <form
+    method="post"
+    action="{% url 'profile_channel' %}"
+    class="profile-field profile-field--channel input-form"
+  >
+    {% csrf_token %}
+    <label
+      for="{{ channel_form.channel.id_for_label }}"
+      class="channel__label profile-label"
+      >Выберите канал уведомлений</label
+    >
+    {{ channel_form.channel }}
+  </form>
+  {% endif %} {% if not profile.telegram_id %}
+  <div class="social-binding social-binding--telegram">
+    <span class="tg-label profile-label">Привязать аккаунт:</span>
+    {% include "radar/components/telegram-widjet.html" %}
+  </div>
+  {% endif %}
+
+  <form method="post" class="profile__logout-btn" action="{% url 'logout' %}">
+    {% csrf_token %}
+    <button type="submit">Выйти</button>
+  </form>
 </div>
 {% endblock %}

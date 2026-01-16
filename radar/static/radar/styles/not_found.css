@@ -182,26 +182,6 @@ select option {
   color: white;
 }
 
-.form__wrapper {
-  align-self: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background: var(--main-color);
-  border-radius: 30px;
-  padding: 30px;
-  width: 60%;
-  gap: 15px;
-}
-
-.input-form {
-  display: flex;
-  gap: 10px;
-  border: 1px solid var(--btn-bg);
-  padding: 15px;
-  border-radius: 5px;
-}
-
 .header__wrapper {
   position: relative;
   margin: 0;
@@ -243,21 +223,17 @@ select option {
   font-weight: bold;
 }
 
-.form {
+.not-found__wrapper {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  align-items: center;
+  gap: 50px;
 }
 
-.telegram-widjet-auth {
-  align-self: center;
-}
-
-.reg__title {
-  align-self: center;
-}
-
-.btn--tologin {
-  background: rgb(42.4562874251, 88.8437125749, 65.2568862275);
+.not-found--text {
+  font-weight: bold;
   text-align: center;
-}/*# sourceMappingURL=register.css.map */
+}
+.not-found--image {
+  width: 200px;
+}/*# sourceMappingURL=not_found.css.map */

@@ -1,61 +1,43 @@
-{% extends "radar/base.html" %}
-{% load static %}
-
-{% block scripts %}
+{% extends "radar/base.html" %} {% load static %} {% block scripts %}
 <script src="https://smartcaptcha.yandexcloud.net/captcha.js" defer></script>
-{% endblock %}
-
-{% block extra_css %}
+{% endblock %} {% block extra_css %}
 <link rel="stylesheet" href="{% static 'radar/styles/register.css' %}" />
-{% endblock %}
-
-{% block content %}
+{% endblock %} {% block content %}
 <div class="reg__wrapper container form__wrapper">
-    <form method="post" class="reg__form form">
-        <h2 class="reg__title">Регистрация</h2>
-        
-        {% csrf_token %}
+  <form method="post" class="reg__form form">
+    <h2 class="reg__title">Регистрация</h2>
 
-        <div class="form__field input-form">
-            {{ reg_form.username.label_tag }}
-            {{ reg_form.username }}
-        </div>
+    {% csrf_token %}
 
-        <div class="form__field input-form">
-            <label for="{{ email_form.email.id_for_label }}">Email:</label>
-            {{ email_form.email }}
-        </div>
+    <div class="form__field input-form">
+      {{ reg_form.username.label_tag }} {{ reg_form.username }}
+    </div>
+    <div class="form__field input-form">
+      <label for="{{ email_form.email.id_for_label }}">Email:</label>
+      {{ email_form.email }}
+    </div>
+    <div class="form__field input-form">
+      {{ reg_form.password1.label_tag }} {{ reg_form.password1 }}
+    </div>
 
-        <div class="form__field input-form">
-            {{ reg_form.password1.label_tag }}
-            {{ reg_form.password1 }}
+    <div class="form__field input-form">
+      {{ reg_form.password2.label_tag }} {{ reg_form.password2 }}
+    </div>
+    {% for error in form.username.errors %}
+    <p class="error">{{ error }}</p>
+    {% endfor %} {% for error in form.password1.errors %}
+    <p class="error">{{ error }}</p>
+    {% endfor %} {% for error in form.password2.errors %}
+    <p class="error">{{ error }}</p>
+    {% endfor %} {% if is_captcha_error %}
+    <p class="error">Вы не прошли каптчу.</p>
+    {% endif %} {% include "radar/components/captcha.html" %}
 
-        </div>
-
-        <div class="form__field input-form">
-            {{ reg_form.password2.label_tag }}
-            {{ reg_form.password2 }}
-
-        </div>
-        {% for error in form.username.errors %}
-            <p class="error">{{ error }}</p>
-        {% endfor %}
-        {% for error in form.password1.errors %}
-            <p class="error">{{ error }}</p>
-        {% endfor %}
-        {% for error in form.password2.errors %}
-            <p class="error">{{ error }}</p>
-        {% endfor %}
-
-        {% if is_captcha_error %}
-            <p class="error">Вы не прошли каптчу.</p>
-        {% endif %}
-
-        {% include "radar/components/captcha.html" %}
-
-        <button type="submit" class="btn btn--create">Создать аккаунт</button>
-        <a class="btn btn--tologin" href="{% url 'login' %}">У меня уже есть аккаунт</a>
-    </form>
-    {% include "radar/components/telegram-widjet.html" %}
+    <button type="submit" class="btn btn--create">Создать аккаунт</button>
+    <a class="btn btn--tologin" href="{% url 'login' %}"
+      >У меня уже есть аккаунт</a
+    >
+  </form>
+  {% include "radar/components/telegram-widjet.html" %}
 </div>
 {% endblock %}

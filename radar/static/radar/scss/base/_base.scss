@@ -29,5 +29,13 @@ h6 {
 }
 
 .error {
-  color: rgb(236, 72, 91)
+  color: rgb(236, 72, 91);
+}
+
+select {
+  border: 1px #fff solid;
+  border-radius: 5px;
+  option {
+    color: #000;
+  }
 }

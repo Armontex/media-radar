@@ -1,0 +1,13 @@
+{% extends "radar/base.html" %} 
+{% load static %} 
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'radar/styles/not_found.css' %}" />
+{% endblock %} 
+
+{% block content %}
+<div class="not-found__wrapper container">
+  <h1 class="not-found--text">Страница не найдена: <span class="error">404</span></h1>
+  <img src="{% static 'radar/icons/crying-emoji.png' %}" alt="" class="not-found--image">
+</div>
+{% endblock %}

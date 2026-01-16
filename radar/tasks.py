@@ -46,7 +46,7 @@ def notify_email(profile: Profile, title: Title, log: NotificationLog) -> bool:
                                         season=log.release.season,
                                         number=log.release.number)
         msg = build_email_message(
-            profile.email,
+            profile.email, # type: ignore
             title="Уведомление о новом выпуске",
             text_content=f"Вышел новый выпуск по {title.name}!",
             html_content=template)
@@ -91,18 +91,18 @@ def notify(sub: Subscription, release: Release) -> None:
         profile=sub.profile,
         title=sub.title,
         release=release,
-        notify_channel=sub.notify_channel,
+        notify_channel=sub.profile.main_channel,
         sent_at=timezone.now(),
     )
 
     success = False
-    if sub.notify_channel == NotifyChannelChoices.EMAIL:
+    if sub.profile.main_channel == NotifyChannelChoices.EMAIL:
         success = notify_email(sub.profile, sub.title, log)
-    elif sub.notify_channel == NotifyChannelChoices.TELEGRAM:
+    elif sub.profile.main_channel == NotifyChannelChoices.TELEGRAM:
         success = notify_telegram(sub.profile, sub.title, log)
     else:
         raise NotImplementedError(
-            f"Неизвестный канал уведомлений: {sub.notify_channel}")
+            f"Неизвестный канал уведомлений: {sub.profile.main_channel}")
 
     if not success:
         log.status = StatusChoices.ERROR

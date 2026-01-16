@@ -54,7 +54,7 @@ class Profile(models.Model):
         on_delete=models.CASCADE,
         related_name="profile",
     )
-    email = models.EmailField("EMAIL")
+    email = models.EmailField("EMAIL", null=True, default=None)
     telegram_id = models.IntegerField("TELEGRAM_ID",
                                       unique=True,
                                       null=True,
@@ -91,10 +91,10 @@ class Subscription(models.Model):
         blank=True,
         default=None,
     )
-    notify_channel = models.CharField("Канал уведомлений",
-                                      choices=NotifyChannelChoices.choices,
-                                      default=NotifyChannelChoices.EMAIL,
-                                      max_length=24)
+    # notify_channel = models.CharField("Канал уведомлений",
+    #                                   choices=NotifyChannelChoices.choices,
+    #                                   default=NotifyChannelChoices.EMAIL,
+    #                                   max_length=24)
 
     class Meta:
         constraints = [
