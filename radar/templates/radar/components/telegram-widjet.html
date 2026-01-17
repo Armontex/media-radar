@@ -15,7 +15,7 @@
       ?.split("=")[1];
 
     function onTelegramAuth(user) {
-      fetch("/auth/telegram/", {
+      fetch("/api/auth/telegram/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

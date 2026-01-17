@@ -3,12 +3,14 @@ import json
 import hashlib
 import hmac
 from django.http import HttpRequest
-from typing import NamedTuple, Literal
+from typing import NamedTuple, Literal, Callable, Iterable, TypeVar
 from apps.providers.tvmaze import TitleSchema
 from apps.core.config import settings
 from apps.core.logger import logger
-from .models import Profile, Title
-from .mappers import title_to_schema
+
+
+T = TypeVar("T")
+TitleKey = tuple[str, int]
 
 
 class TitleContext(NamedTuple):
@@ -16,34 +18,23 @@ class TitleContext(NamedTuple):
     title: TitleSchema
 
 
-def get_titles_context(titles: list[TitleSchema] | list[Title],
-                       profile: Profile | None = None) -> list[TitleContext]:
-    result: list[TitleContext] = []
-    if profile:
+def built_titles_context(titles: Iterable[T],
+                         *,
+                         mapper: Callable[[T], TitleSchema],
+                         subscribed: Iterable[TitleKey],
+                         is_authenticated: bool) -> Iterable[TitleContext]:
+    result = []
 
-        sub_titles: list[Title] = list(
-            map(lambda x: x.title,
-                profile.subscriptions.all()))  # type: ignore
-        source_title_id = {}
-        for t in sub_titles:
-            if t.source in source_title_id:
-                source_title_id[t.source].append(t.external_id)
-            else:
-                source_title_id.setdefault(t.source, [t.external_id])
+    for t in titles:
+        title = mapper(t)
 
-        for t in titles:
-            source = t.source if isinstance(t, Title) else t.source.value
-            if source in source_title_id:
-                if t.external_id in source_title_id[source]:
-                    result.append(TitleContext("delete", t if isinstance(
-                        t, TitleSchema) else title_to_schema(t)))
-                    continue
-            result.append(TitleContext("add", t if isinstance(
-                t, TitleSchema) else title_to_schema(t)))
-    else:
-        for t in titles:
-            result.append(TitleContext("not_auth", t if isinstance(
-                t, TitleSchema) else title_to_schema(t)))
+        if not is_authenticated:
+            action = "not_auth"
+        else:
+            key = (title.source.value, title.external_id)
+            action = "delete" if key in subscribed else "add"
+        result.append(TitleContext(action, title))
+
     return result
 
 
@@ -67,7 +58,7 @@ def check_captcha(token: str, ip: str):
     return json.loads(server_output)["status"] == "ok"
 
 
-def get_client_ip(request: HttpRequest):
+def get_client_ip(request: HttpRequest) -> str | None:
     x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
     if x_forwarded_for:
         return x_forwarded_for.split(',')[0].strip()

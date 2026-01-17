@@ -1,7 +1,7 @@
 {% load static %}
 
 {% if t.action == "add" %}
-    <form method="post" action="{% url 'subscriptions_add' %}" class="item__action-form">
+    <form method="post" action="{% url 'api_subscriptions_title_add' %}" class="item__action-form">
         {% csrf_token %}
         <input type="hidden" name="source" value="{{ t.title.source.value }}">
         <input type="hidden" name="external_id" value="{{ t.title.external_id }}">
@@ -10,7 +10,7 @@
         </button>
     </form>
 {% elif t.action == "delete" %}
-    <form method="post" action="{% url 'subscriptions_delete' %}" class="item__action-form">
+    <form method="post" action="{% url 'api_subscriptions_title_delete' %}" class="item__action-form">
         {% csrf_token %}
         <input type="hidden" name="source" value="{{ t.title.source.value }}">
         <input type="hidden" name="external_id" value="{{ t.title.external_id }}">

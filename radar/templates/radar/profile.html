@@ -18,7 +18,7 @@
     <span class="email__text">{{ profile.email }}</span>
   </div>
   {% else %}
-  <form method="post" class="profile-field profile-field--email input-form">
+  <form method="post" action="{% url 'api_profile_email' %}" class="profile-field profile-field--email input-form">
     {% csrf_token %}
     <label
       for="{{ email_form.email.id_for_label }}"
@@ -29,12 +29,11 @@
     <button type="submit">Сохранить</button>
   </form>
   {% endif %}
-  <!-- Выбор варианта отправки уведомлений если есть 2 привязки -->
 
   {% if profile.telegram_id and profile.email %}
   <form
     method="post"
-    action="{% url 'profile_channel' %}"
+    action="{% url 'api_profile_channel' %}"
     class="profile-field profile-field--channel input-form"
   >
     {% csrf_token %}

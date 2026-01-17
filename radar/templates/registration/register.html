@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="{% static 'radar/styles/register.css' %}" />
 {% endblock %} {% block content %}
 <div class="reg__wrapper container form__wrapper">
-  <form method="post" class="reg__form form">
+  <form method="post" action="{% url 'api_auth_register' %}" class="reg__form form">
     <h2 class="reg__title">Регистрация</h2>
 
     {% csrf_token %}
