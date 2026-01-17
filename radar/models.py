@@ -91,10 +91,6 @@ class Subscription(models.Model):
         blank=True,
         default=None,
     )
-    # notify_channel = models.CharField("Канал уведомлений",
-    #                                   choices=NotifyChannelChoices.choices,
-    #                                   default=NotifyChannelChoices.EMAIL,
-    #                                   max_length=24)
 
     class Meta:
         constraints = [

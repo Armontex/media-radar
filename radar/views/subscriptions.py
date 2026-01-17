@@ -4,7 +4,7 @@ from django.views.decorators.http import require_POST
 from django.http import HttpRequest, HttpResponseServerError, HttpResponseBadRequest
 from apps.providers.enums import Source
 from apps.providers import TVMazeProvider, ContentProvider
-from apps.core.logger import logger
+from apps.utils.logger import logger
 
 from ..utils import built_titles_context
 from ..mappers import title_to_schema_mapper

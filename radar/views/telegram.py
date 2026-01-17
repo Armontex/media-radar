@@ -2,7 +2,7 @@ import json
 from django.views.decorators.http import require_POST
 from django.contrib.auth import login, get_user_model
 from django.http import HttpRequest, JsonResponse
-from apps.core.config import settings
+from django.conf import settings
 from ..models import Profile
 from ..utils import verify_telegram_auth
 from ..choices import NotifyChannelChoices

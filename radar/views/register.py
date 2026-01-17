@@ -3,7 +3,7 @@ from django.contrib.auth import login
 from django.shortcuts import render, redirect
 from django.views.decorators.http import require_POST
 from django.http import HttpRequest
-from apps.core.config import settings
+from django.conf import settings
 from ..models import Profile
 from ..forms import EmailForm
 from ..utils import (check_captcha, get_client_ip)

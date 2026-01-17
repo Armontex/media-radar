@@ -1,5 +1,7 @@
-from .schemas import TitleSchema, TVMazeTitleSchema, TVMazeEpisodeSchema, TVMazeShowSchema
-from .mappers import map_tvmaze_schema_to_title, map_tvmaze_ep_schema_to_release, map_tvmaze_show_schema_to_title
+from .schemas import (TitleSchema, TVMazeTitleSchema,
+                      TVMazeEpisodeSchema, TVMazeShowSchema)
+from .mappers import (map_tvmaze_schema_to_title,
+                      map_tvmaze_ep_schema_to_release, map_tvmaze_show_schema_to_title)
 from .base import ContentProvider
 from ..utils.http import HTTPClient
 

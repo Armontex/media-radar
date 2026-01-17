@@ -1,9 +1,8 @@
 import os
 import threading
 import time
-
-from apps.core.logger import logger
 from django.apps import AppConfig
+from apps.utils.logger import logger
 
 
 class RadarConfig(AppConfig):

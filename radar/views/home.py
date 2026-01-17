@@ -12,7 +12,7 @@ def home(request: HttpRequest):
     if q:
         provider = TVMazeProvider()
         search_results = provider.get_titles(q)
-    
+
     subscribed = set()
     if request.user.is_authenticated:
         profile = Profile.objects.get(user=request.user)

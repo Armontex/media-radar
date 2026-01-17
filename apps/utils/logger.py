@@ -1,6 +1,6 @@
 import sys
 from loguru import logger
-from .constants import LOG_DIR
+from ..core.constants import LOG_DIR
 
 LOG_FORMAT = "<green>{time:HH:mm:ss}</green> | <level>{level}</level> | " \
              "{name}:{function}:{line} - {message} | extra={extra}"

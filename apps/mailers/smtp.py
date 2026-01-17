@@ -1,7 +1,7 @@
 import smtplib
 from email.message import EmailMessage
-from ..core.config import settings
-from ..core.logger import logger
+from django.conf import settings
+from ..utils.logger import logger
 
 
 class SMTPMailer:

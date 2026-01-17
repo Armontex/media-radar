@@ -28,17 +28,17 @@ def profile_email(request: HttpRequest):
     if email_form.is_valid():
         profile.email = email_form.cleaned_data["email"]
         profile.save()
-        
+
     return redirect("profile")
 
 
 @require_POST
 @login_required
-def profile_channel(request: HttpRequest):  
+def profile_channel(request: HttpRequest):
     profile = Profile.objects.get(user=request.user)
     form = NotifyChannelForm(request.POST)
     if form.is_valid():
         profile.main_channel = form.cleaned_data["channel"]
         profile.save()
-        
+
     return redirect("profile")

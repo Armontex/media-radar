@@ -16,7 +16,7 @@ class TelegramMailer:
                         json={
                             "chat_id": chat_id,
                             "text": text
-                        })
+            })
 
     def _send_photo(self,
                     chat_id: int,
@@ -29,7 +29,7 @@ class TelegramMailer:
                             "chat_id": chat_id,
                             "photo": image_url,
                             "caption": caption,
-                        })
+            })
 
     def send(self,
              chat_id: int,

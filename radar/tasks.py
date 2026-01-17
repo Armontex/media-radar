@@ -1,15 +1,14 @@
+from typing import Callable
 from django.db import transaction
 from django.utils import timezone
-from typing import Callable
-
-from radar.models import Title, Subscription, NotificationLog, Release, Profile
-from radar.choices import StatusChoices, NotifyChannelChoices
+from django.conf import settings
 from apps.providers import TVMazeProvider, ContentProvider
 from apps.providers.enums import Source
 from apps.mailers import GmailMailer, TelegramMailer
 from apps.mailers.utils import build_email_message, fill_notify_template
-from apps.core.config import settings
-from apps.core.logger import logger
+from apps.utils.logger import logger
+from .models import Title, Subscription, NotificationLog, Release, Profile
+from .choices import StatusChoices, NotifyChannelChoices
 
 
 providers: dict[str, ContentProvider] = {

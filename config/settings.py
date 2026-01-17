@@ -9,11 +9,28 @@ https://docs.djangoproject.com/en/6.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
-import os
-from dotenv import load_dotenv
 from pathlib import Path
+from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import SecretStr
 
-load_dotenv()
+
+class ENVSettings(BaseSettings):
+
+    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+
+    EMAIL_HOST: str = "smtp.gmail.com"
+    EMAIL_PORT: int = 465
+    EMAIL_APP_PASSWORD: SecretStr
+    EMAIL_SENDER: str
+    CAPTCHA_SERVER_KEY: SecretStr
+    CAPTCHA_CLIENT_KEY: str
+    BOT_TOKEN: SecretStr
+    SECRET_KEY: str
+    DEBUG: bool
+    DATABASE_URL: str
+
+
+_env = ENVSettings()  # pyright: ignore[reportCallIssue]
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,15 +38,28 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = str(os.getenv("SECRET_KEY"))
+SECRET_KEY = _env.SECRET_KEY
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.getenv("DEBUG") == "True"
+DEBUG = _env.DEBUG
 
-DATABASE_URL = str(os.getenv("DATABASE_URL"))
+DATABASE_URL = _env.DATABASE_URL
+
+BOT_TOKEN = _env.BOT_TOKEN
+
+CAPTCHA_CLIENT_KEY = _env.CAPTCHA_CLIENT_KEY
+CAPTCHA_SERVER_KEY = _env.CAPTCHA_SERVER_KEY
+
+EMAIL_HOST = _env.EMAIL_HOST
+EMAIL_PORT = _env.EMAIL_PORT
+EMAIL_SENDER = _env.EMAIL_SENDER
+EMAIL_APP_PASSWORD = _env.EMAIL_APP_PASSWORD
+
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'mediaradar.loca.lt']
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://mediaradar.loca.lt",
+]
 
 # Application definition
 
@@ -127,7 +157,3 @@ LOGOUT_REDIRECT_URL = '/auth/login/'
 APPEND_SLASH = True
 
 SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"
-
-CSRF_TRUSTED_ORIGINS = [
-    "https://mediaradar.loca.lt",
-]

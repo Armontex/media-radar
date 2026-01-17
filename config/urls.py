@@ -20,7 +20,6 @@ from django.urls import path, include
 import radar.views
 
 urlpatterns = [
-
     path("admin/", admin.site.urls),
     path("auth/", include("django.contrib.auth.urls")),
     path("auth/",

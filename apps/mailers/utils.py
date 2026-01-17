@@ -1,6 +1,6 @@
 from bs4 import BeautifulSoup
 from email.message import EmailMessage
-from .constants import TEMPLATES_DIR
+from ..core.constants import TEMPLATES_DIR
 
 
 def _get_template(name: str) -> str:
@@ -15,15 +15,26 @@ def fill_notify_template(title_name: str,
     template = BeautifulSoup(_get_template("notify"), "html.parser")
 
     name = template.find(class_="card-name")
-    name.string = title_name  # type: ignore
+    if not name:
+        raise ValueError("Отсутсвует card-name.")
+
+    name.string = title_name
 
     if cover_url:
+
         cover = template.find(class_="card-cover")
-        cover.attrs["src"] = cover_url  # type: ignore
+        if not cover:
+            raise ValueError("Отсутсвует card-cover.")
+
+        cover.attrs["src"] = cover_url
 
     if season and number:
+
         episode_info = template.find(class_="message-episode-info")
-        episode_info.string = f"Сезон: {season} | Серия: {number}"  # type: ignore
+        if not episode_info:
+            raise ValueError("Отсутсвует message-episode-info.")
+
+        episode_info.string = f"Сезон: {season} | Серия: {number}"
 
     return str(template)
 

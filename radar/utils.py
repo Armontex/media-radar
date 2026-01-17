@@ -1,12 +1,11 @@
-import requests
-import json
 import hashlib
 import hmac
 from django.http import HttpRequest
+from django.conf import settings
 from typing import NamedTuple, Literal, Callable, Iterable, TypeVar
 from apps.providers.tvmaze import TitleSchema
-from apps.core.config import settings
-from apps.core.logger import logger
+from apps.utils.logger import logger
+from apps.utils.http import HTTPClient
 
 
 T = TypeVar("T")
@@ -39,23 +38,20 @@ def built_titles_context(titles: Iterable[T],
 
 
 def check_captcha(token: str, ip: str):
-    resp = requests.post("https://smartcaptcha.cloud.yandex.ru/validate",
-                         data={
-                             "secret":
-                             settings.CAPTCHA_SERVER_KEY.get_secret_value(),
-                             "token":
-                             token,
-                             "ip":
-                             ip
-                         },
-                         timeout=1)
-    server_output = resp.content.decode()
-    if resp.status_code != 200:
+    url = "https://smartcaptcha.cloud.yandex.ru/validate"
+    with HTTPClient(url) as client:
+        response = client.post(data={
+            "secret": settings.CAPTCHA_SERVER_KEY.get_secret_value(),
+            "token": token,
+            "ip": ip
+        })
+    server_output = response.json()
+    if response.status_code != 200:
         logger.warning(
-            f"Allow access due to an error: code={resp.status_code}; message={server_output}",
+            f"Allow access due to an error: code={response.status_code} | message={server_output}",
         )
         return True
-    return json.loads(server_output)["status"] == "ok"
+    return server_output["status"] == "ok"
 
 
 def get_client_ip(request: HttpRequest) -> str | None:
@@ -68,8 +64,11 @@ def get_client_ip(request: HttpRequest) -> str | None:
 def verify_telegram_auth(data: dict, bot_token: str) -> bool:
     hash_received = data.pop('hash')
     check_list = [f"{k}={v}" for k, v in sorted(data.items())]
+
     data_check_string = "\n".join(check_list).encode()
+
     secret_key = hashlib.sha256(bot_token.encode()).digest()
     calculated = hmac.new(secret_key, data_check_string,
                           hashlib.sha256).hexdigest()
+
     return calculated == hash_received

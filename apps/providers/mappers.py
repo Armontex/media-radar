@@ -1,4 +1,5 @@
-from .schemas import TVMazeTitleSchema, TitleSchema, TVMazeEpisodeSchema, ReleaseSchema, TVMazeShowSchema
+from .schemas import (TVMazeTitleSchema, TitleSchema,
+                      TVMazeEpisodeSchema, ReleaseSchema, TVMazeShowSchema)
 from .enums import Source
 
 
