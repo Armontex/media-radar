@@ -51,6 +51,9 @@ Thumbs.db
 *.iml
 *.swp
 
+# --- Docker ---
+.dockerignore
+
 # --- My ---
 docs/
 x.py
