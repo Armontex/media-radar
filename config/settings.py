@@ -18,8 +18,6 @@ class ENVSettings(BaseSettings):
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
-    EMAIL_HOST: str = "smtp.gmail.com"
-    EMAIL_PORT: int = 465
     EMAIL_APP_PASSWORD: SecretStr
     EMAIL_SENDER: str
     CAPTCHA_SERVER_KEY: SecretStr
@@ -28,6 +26,7 @@ class ENVSettings(BaseSettings):
     SECRET_KEY: str
     DEBUG: bool
     DATABASE_URL: str
+    SITE_HOST: str
 
 
 _env = ENVSettings()  # pyright: ignore[reportCallIssue]
@@ -49,16 +48,16 @@ BOT_TOKEN = _env.BOT_TOKEN
 CAPTCHA_CLIENT_KEY = _env.CAPTCHA_CLIENT_KEY
 CAPTCHA_SERVER_KEY = _env.CAPTCHA_SERVER_KEY
 
-EMAIL_HOST = _env.EMAIL_HOST
-EMAIL_PORT = _env.EMAIL_PORT
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 465
 EMAIL_SENDER = _env.EMAIL_SENDER
 EMAIL_APP_PASSWORD = _env.EMAIL_APP_PASSWORD
 
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'mediaradar.loca.lt']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', _env.SITE_HOST]
 
 CSRF_TRUSTED_ORIGINS = [
-    "https://mediaradar.loca.lt",
+    f"https://{_env.SITE_HOST}"
 ]
 
 # Application definition
