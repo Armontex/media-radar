@@ -23,7 +23,7 @@ local_settings.py
 .env.*
 !.env.example
 db.sqlite3-journal
-
+data/
 
 # Django static/media
 staticfiles/
@@ -54,8 +54,7 @@ Thumbs.db
 # --- Docker ---
 .dockerignore
 
-# --- My ---
-docs/
+# --- Misc ---
 x.py
 todo.md
 my.md
