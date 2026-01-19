@@ -110,6 +110,7 @@ BOT_TOKEN=your-telegram-bot-token
 8. Миграции БД
 
 ```bash
+mkdir data
 python manage.py migrate
 ```
 
