@@ -195,6 +195,8 @@ lt --port 8000 --subdomain mediaradar
 
 4. Вводите SITE_HOST
 
+---
+
 ## Запуск и установка (Docker)
 
 1. Клонирование репозитория
@@ -258,6 +260,8 @@ docker compose exec -it media-radar python manage.py createsuperuser
 docker compose restart
 ```
 
+---
+
 ## Использование
 
 ### Регистрация нового пользователя
@@ -302,6 +306,8 @@ docker compose restart
 ### Профиль
 
 Вариант 1 (Если регистрировались через username и пароль):
+
+![profile-not-tg](/docs/images/profile_not-tg.png)
 
 1. Перейдите на `/profile/`
 2. Есть возможность привязать Telegram-аккаунт, который ранее не был привязан.
@@ -348,6 +354,8 @@ docker compose restart
 
 ![notify-example-tg](/docs/images/notify_example_telegram.png)
 
+---
+
 ## API и Данные
 
 ### TVMaze API (поиск сериалов)
@@ -359,6 +367,8 @@ docker compose restart
 **Источник**: https://core.telegram.org/bots/api
 
 ### Gmail SMTP (отправка уведомлений)
+
+---
 
 ## Лицензия
 
