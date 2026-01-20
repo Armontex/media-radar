@@ -235,11 +235,10 @@ BOT_TOKEN=your-telegram-bot-token
 
 Чтобы заполнить ключи, читаем [Важные дополнения](#важные-дополнения).
 
-5. Создаём db.sqlite3
+5. Создаём директорию data (для хранения db)
 
 ```bash
 mkdir data
-touch data/db.sqlite3
 ```
 
 6. Создаём образ и запускаем
@@ -251,8 +250,8 @@ docker compose up -d
 7. Миграции БД и супер-пользователь
 
 ```bash
-docker compose exec media-radar python manage.py migrate
-docker compose exec -it media-radar python manage.py createsuperuser
+docker exec media-radar python manage.py migrate
+docker exec -it media-radar python manage.py createsuperuser
 ```
 
 8. Рестарт (по необходимости)
